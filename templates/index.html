@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Server events push demo</title>
+    <script src="/static/js/jquery-latest.js"></script>
+    <script>
+        var source = new EventSource("{{ url_for('sse.stream') }}");
+
+        source.addEventListener('server_closed', function(event){
+            source.close();
+        });
+
+        source.addEventListener('new_answers', function(event){
+            console.log(event)
+            var data = JSON.parse(event.data)
+            $('#data').html(data.question + ' : ' + data.value)
+        }, false);
+    </script>
+</head>
+<body>
+<div id="data">received pushed data</div>
+</body>
+</html>
